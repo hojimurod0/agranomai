@@ -19,14 +19,14 @@ class _ChathistoryState extends State<Chathistory> {
           "Chat History",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.orange,
+            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.more_vert_sharp, size: 30, color: Colors.orange),
+            icon: Icon(Icons.more_vert_sharp, size: 30, color: Colors.black),
             onPressed: () {},
           ),
         ],
@@ -40,10 +40,10 @@ class _ChathistoryState extends State<Chathistory> {
           itemBuilder: (context, index) {
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/profil.png'),
+                backgroundImage: AssetImage('assets/images/insate.png'),
               ),
 
-              title: Text('Samuel Joe'),
+              title: Text('Meva pashshalari'),
               subtitle: Text('20 Sep 2023 '),
               trailing: Text('12:00'),
             );
@@ -98,18 +98,7 @@ class _ChathistoryState extends State<Chathistory> {
               ),
               label: 'Home',
             ),
-            // BottomNavigationBarItem(
-            //   icon: GestureDetector(
-            //     onTap: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) => ImagePickerScreen()),
-            //       );
-            //     },
-            //     child: Icon(Icons.camera_alt_outlined, size: 30),
-            //   ),
-            //   label: 'Kamera',
-            // ),
+
             BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: () {

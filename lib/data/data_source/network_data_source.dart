@@ -17,7 +17,8 @@ class AgronomAirService {
           filename: fileName,
           contentType: MediaType("image", fileExt),
         ),
-      });
+      }
+      );
 
 
       print("formData ${formData.fields}");

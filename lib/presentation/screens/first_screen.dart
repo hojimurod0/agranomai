@@ -48,7 +48,10 @@ class _FirstScreenState extends State<FirstScreen> {
                 ),
               ),
             ),
-            IconButton(icon: Icon(Icons.settings, size: 30), onPressed: () {}),
+            IconButton(
+              icon: Icon(Icons.more_vert, size: 30, color: Colors.orange),
+              onPressed: () {},
+            ),
             SizedBox(width: 10),
           ],
         ),
@@ -69,7 +72,7 @@ class _FirstScreenState extends State<FirstScreen> {
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 45, vertical: 16),
               child: Text(
-                '65 \n Rasm\nIzlangan',
+                '65 \n Rasm Izlangan',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 35,
@@ -80,7 +83,7 @@ class _FirstScreenState extends State<FirstScreen> {
               padding: EdgeInsets.symmetric(vertical: 30),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Colors.green,
+                color: Colors.green[900],
               ),
             ),
             SizedBox(height: 20),
@@ -174,18 +177,7 @@ class _FirstScreenState extends State<FirstScreen> {
               ),
               label: 'Home',
             ),
-            // BottomNavigationBarItem(
-            //   icon: GestureDetector(
-            //     onTap: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) => CameraScreen()),
-            //       );
-            //     },
-            //     child: Icon(Icons.camera_alt_outlined, size: 30),
-            //   ),
-            //   label: 'Kamera',
-            // ),
+
             BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: () {

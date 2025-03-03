@@ -1,136 +1,162 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
+// import 'dart:io';
+// import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
 
-class ImagePickerScreen extends StatefulWidget {
-  @override
-  _ImagePickerScreenState createState() => _ImagePickerScreenState();
-}
+// class ChatScreen extends StatefulWidget {
+//   @override
+//   _ChatScreenState createState() => _ChatScreenState();
+// }
 
-class _ImagePickerScreenState extends State<ImagePickerScreen> {
-  File? _image;
-  String? _detectedName;
-  String? _detectedDescription;
-  String? _detectedImageUrl;
+// class _ChatScreenState extends State<ChatScreen> {
+//   File? _selectedImage;
+//   final List<Map<String, dynamic>> _messages = [];
+//   final TextEditingController _textController = TextEditingController();
 
-  final Dio _dio = Dio();
-  final String _token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjdjMDQ0N2E5ZjA2NTY3NjM0MDhkNThiIiwiaWF0IjoxNzQwNzM3NDgzfQ.pBXPJ719H69sAyFwicnvDhvCjAde0uoeppt2bNmHyKg";
+//   // Kamera orqali rasm tanlash
+//   Future<void> _pickImage() async {
+//     final pickedFile = await ImagePicker().pickImage(
+//       source: ImageSource.camera, // Kameradan rasm olish
+//     );
+//     if (pickedFile == null) return;
 
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-    );
-    if (pickedFile == null) return;
+//     setState(() {
+//       _selectedImage = File(pickedFile.path);
+//       // Tanlangan rasmni xabar sifatida qo‘shish
+//       _messages.add({"type": "image", "content": _selectedImage});
+//     });
+//   }
 
-    setState(() {
-      _image = File(pickedFile.path);
-      _detectedName = null;
-      _detectedDescription = null;
-      _detectedImageUrl = null;
-    });
+//   // Yozilgan xabarni yuborish
+//   void _sendMessage() {
+//     if (_textController.text.trim().isEmpty) return;
 
-    await _sendImageToApi(_image!);
-  }
+//     setState(() {
+//       _messages.add({"type": "text", "content": _textController.text});
+//       _textController.clear(); // Matnni tozalash
+//     });
+//   }
 
-  Future<void> _sendImageToApi(File imageFile) async {
-    try {
-      String fileName = imageFile.path.split('/').last;
-      String fileExt = fileName.split('.').last;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Agronom AI Chat"),
+//         backgroundColor: Colors.green,
+//         centerTitle: true,
+//       ),
+//       body: Column(
+//         children: [
+//           // Chatdagi xabarlar ro‘yxatini chiqarish
+//           Expanded(
+//             child: ListView.builder(
+//               padding: const EdgeInsets.all(16),
+//               itemCount: _messages.length,
+//               itemBuilder: (context, index) {
+//                 final message = _messages[index];
+//                 if (message["type"] == "text") {
+//                   return _buildTextMessage(message["content"]);
+//                 } else if (message["type"] == "image") {
+//                   return _buildImageMessage(message["content"]);
+//                 }
+//                 return const SizedBox.shrink(); // Hech qanday xabar yo‘q bo‘lsa
+//               },
+//             ),
+//           ),
 
-      final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(
-          imageFile.path,
-          filename: fileName,
-          contentType: MediaType("image", fileExt),
-        ),
-      });
+//           // Foydalanuvchi uchun input qismi
+//           _buildInputArea(),
+//         ],
+//       ),
+//     );
+//   }
 
-      final response = await _dio.post(
-        'https://api.agronomai.birnima.uz/api/upload',
-        data: formData,
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $_token",
-            "Content-Type": "multipart/form-data",
-          },
-        ),
-      );
+  
+//   Widget _buildTextMessage(String text) {
+//     return Align(
+//       alignment: Alignment.centerRight,
+//       child: Container(
+//         margin: const EdgeInsets.only(bottom: 10),
+//         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//         decoration: BoxDecoration(
+//           color: Colors.green[200],
+//           borderRadius: BorderRadius.circular(20),
+//         ),
+//         child: Text(
+//           text,
+//           style: const TextStyle(fontSize: 16, color: Colors.black87),
+//         ),
+//       ),
+//     );
+//   }
 
-      debugPrint("Server javobi: ${response.data}");
 
-      if (response.statusCode == 200 && response.data["data"] != null) {
-        setState(() {
-          _detectedName =
-              response.data["data"]["type"]["name_uz"] ?? "Noma’lum";
-          _detectedDescription =
-              response.data["data"]["type"]["description"] ?? "Tavsif yo‘q";
-          _detectedImageUrl =
-              response.data["data"]["image"] != null
-                  ? "https://api.agronomai.birnima.uz${response.data["data"]["image"]}"
-                  : null;
-        });
-      } else {
-        debugPrint(" noto‘g‘ri javob keldi: ${response.data}");
-      }
-    } catch (e, stackTrace) {
-      debugPrint('Xatolik: $e\nStackTrace: $stackTrace');
-    }
-  }
+//   Widget _buildImageMessage(File image) {
+//     return Align(
+//       alignment: Alignment.centerRight,
+//       child: Container(
+//         margin: const EdgeInsets.only(bottom: 10),
+//         child: ClipRRect(
+//           borderRadius: BorderRadius.circular(15),
+//           child: Image.file(
+//             image,
+//             height: 200,
+//             width: 150,
+//             fit: BoxFit.cover,
+//           ), // Rasmni ekranda chiqarish
+//         ),
+//       ),
+//     );
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Gallery")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _image == null
-                ? const Text("Iltimos, rasm yuklang")
-                : Image.file(_image!, height: 200),
-            const SizedBox(height: 20),
-            _detectedName != null
-                ? Column(
-                  children: [
-                    Text(
-                      _detectedName!,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      _detectedDescription ?? "",
-                      textAlign: TextAlign.center,
-                    ),
-                    if (_detectedImageUrl != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Image.network(
-                          _detectedImageUrl!,
-                          height: 150,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text(
-                              "Rasmni yuklashda xatolik yuz berdi",
-                            );
-                          },
-                        ),
-                      ),
-                  ],
-                )
-                : const SizedBox.shrink(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _pickImage,
-        child: const Icon(Icons.camera_alt),
-      ),
-    );
-  }
-}
+
+//   Widget _buildInputArea() {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.3),
+//             blurRadius: 5,
+//             offset: const Offset(0, -2),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         children: [
+//           // Kamera tugmasi
+//           IconButton(
+//             onPressed: _pickImage,
+//             icon: const Icon(Icons.camera_alt, color: Colors.green, size: 30),
+//           ),
+
+//           // Matnli input
+//           Expanded(
+//             child: TextField(
+//               controller: _textController,
+//               decoration: InputDecoration(
+//                 hintText: "Xabar yozing...",
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(30),
+//                   borderSide: BorderSide.none,
+//                 ),
+//                 filled: true,
+//                 fillColor: Colors.grey[200],
+//                 contentPadding: const EdgeInsets.symmetric(
+//                   horizontal: 16,
+//                   vertical: 12,
+//                 ),
+//               ),
+//             ),
+//           ),
+
+//           // Yuborish tugmasi
+//           IconButton(
+//             onPressed: _sendMessage,
+//             icon: const Icon(Icons.send, color: Colors.green, size: 30),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

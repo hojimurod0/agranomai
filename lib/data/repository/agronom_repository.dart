@@ -57,7 +57,7 @@ class AgronomAiRepository {
       });
 
       final response = await dio.post(
-        '/upload', // O‘zgartirish kerak bo‘lishi mumkin, serverda rasmni yuklash uchun kerakli endpoint
+        '/upload',
         data: formData,
       );
 
